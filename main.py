@@ -34,3 +34,5 @@ v =np.empty(shape=(len(t_o), 2))
 #set initial conditions
 r[0], v[0] = r_0, v_0
 
+def acc(r):
+    return (-G * M / np.linalg.norm(r)**3) * r
