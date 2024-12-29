@@ -26,13 +26,55 @@ t_max = 365 * 24 * 60 * 60 # 1 year
 
 # time array = np.arange(0, t_max, dt)
 
-t_o = np.arange(0, t_max, dt)
-print(t_o)
-r =np.empty(shape=(len(t_o), 2))
-v =np.empty(shape=(len(t_o), 2))
+t_0 = np.arange(0, t_max, dt)
+print(t_0)
+r =np.empty(shape=(len(t_0), 2))
+v =np.empty(shape=(len(t_0), 2))
 
 #set initial conditions
 r[0], v[0] = r_0, v_0
 
 def acc(r):
-    return (-G * M / np.linalg.norm(r)**3) * r
+  return ((-G * M / np.linalg.norm(r)**3) * r)
+
+# def eulerMethod(r, v, acc, dt):
+#     for i in range(1, len(t_0)):
+#         r[i] =r[i-1] + v[i-1] * dt
+#         v[i] =v[i-1] +acc(r[i-1]) * dt
+
+# eulerMethod(r, v, acc, dt)
+
+# print(f"Max position: {max_position/1e7}, velocity at aphilion: {vel_aphilion/1e3}") 
+
+def rk4_method(r, v, acc, dt):
+  
+   for i in range(1, len(r)):
+    #step 1
+    k1v = acc(r[i-1])
+    k1r = v[i-1]
+
+    #step 2
+    k2v = acc(r[i-1] + 0.5 * dt * k1r)
+    k2r = v[i-1] + 0.5 * dt * k1v
+
+    #step3
+    k3v = acc(r[i-1] * 0.5 * dt *k2r)
+    k3r = v[i-1] + 0.5 * dt * k2v
+   
+    #step 4
+    k4v = acc(r[i-1] + dt * k3r)
+    k4r = v[i-1] + dt * k3v
+
+    r[i] = r[i-1] + dt/((k1r + 2 * k2r + 2 * k3r + k4r)* 6)
+    v[i] = v[i-1] + dt/((k1v + 2 * k2v + 2 * k3v + k4v)* 6)
+
+rk4_method(r, v, acc, dt)
+
+sizes =np.array([np.linalg.norm(postion) for postion in r])
+max_position = np.max(sizes)
+arg_aphilion = np.argmax(sizes)
+vel_aphilion = np.linalg.norm(v[arg_aphilion]) 
+
+print(f"Max position: {max_position/1e9}, velocity at aphilion: {vel_aphilion/1e3}") 
+
+
