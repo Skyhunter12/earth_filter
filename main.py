@@ -47,26 +47,25 @@ def acc(r):
 # print(f"Max position: {max_position/1e7}, velocity at aphilion: {vel_aphilion/1e3}") 
 
 def rk4_method(r, v, acc, dt):
-  
-   for i in range(1, len(r)):
-    #step 1
-    k1v = acc(r[i-1])
-    k1r = v[i-1]
+    for i in range(1, len(r)):
+        # Step 1
+        k1v = acc(r[i-1])
+        k1r = v[i-1]
 
-    #step 2
-    k2v = acc(r[i-1] + 0.5 * dt * k1r)
-    k2r = v[i-1] + 0.5 * dt * k1v
+        # Step 2
+        k2v = acc(r[i-1] + 0.5 * dt * k1r)
+        k2r = v[i-1] + 0.5 * dt * k1v
 
-    #step3
-    k3v = acc(r[i-1] * 0.5 * dt *k2r)
-    k3r = v[i-1] + 0.5 * dt * k2v
-   
-    #step 4
-    k4v = acc(r[i-1] + dt * k3r)
-    k4r = v[i-1] + dt * k3v
+        # Step 3
+        k3v = acc(r[i-1] + 0.5 * dt * k2r)
+        k3r = v[i-1] + 0.5 * dt * k2v
 
-    r[i] = r[i-1] + dt/((k1r + 2 * k2r + 2 * k3r + k4r)* 6)
-    v[i] = v[i-1] + dt/((k1v + 2 * k2v + 2 * k3v + k4v)* 6)
+        # Step 4
+        k4v = acc(r[i-1] + dt * k3r)
+        k4r = v[i-1] + dt * k3v
+
+        r[i] = r[i-1] + (dt / 6.0) * (k1r + 2 * k2r + 2 * k3r + k4r)
+        v[i] = v[i-1] + (dt / 6.0) * (k1v + 2 * k2v + 2 * k3v + k4v)
 
 rk4_method(r, v, acc, dt)
 
